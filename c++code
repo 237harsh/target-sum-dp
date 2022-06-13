@@ -1,0 +1,64 @@
+class Solution {
+  public:
+  
+  //memoization=-
+int fun(int id,long int sum,vector<int> &arr,vector<vector<int>>&dp)
+{
+    if(id==0)
+    {
+        if(sum==0&&arr[0]==0)return 2;
+         if(sum==0)return 1;
+             if(arr[0]==sum)return 1;
+        else
+            return 0;
+    }
+    if(dp[id][sum]!=-1)return dp[id][sum];
+    int ntake=fun(id-1,sum,arr,dp);
+    int take =0;
+    if(arr[id]<=sum)
+        take=fun(id-1,sum-arr[id],arr,dp);
+    
+    return dp[id][sum]=(take+ntake);
+}
+    int findTargetSumWays(vector<int>&arr ,int d) {
+     int n=arr.size();
+       int s=0;
+        for(int i=0;i<n;i++)
+        {
+            s=s+arr[i];
+            
+        }
+        
+        if(s-d<0||(s-d)%2!=0)return 0;
+        s=(s-d)/2;/*
+        vector<vector<int>>dp(n,vector<int>(s+1,-1));
+         return fun(n-1,s,arr,dp);*/
+        
+        ///tabulation=-;
+        
+        
+         vector<vector<int>>dp(n,vector<int>(s+1,0));
+         
+         
+             if(arr[0]==0)dp[0][0]=2;
+             else
+             dp[0][0]=1;
+        
+        if(arr[0]<=s&& arr[0]!=0 )dp[0][arr[0]]=1;
+        
+        for(int i=1;i<n;i++)
+        {
+            for(int t=0;t<=s;t++)
+            {
+                int ntake=dp[i-1][t];
+                int take=0;
+                if(arr[i]<=t)
+                take=dp[i-1][t-arr[i]];
+                
+                dp[i][t]=take+ntake;
+            }
+        }
+         
+        return dp[n-1][s]; 
+         
+    }
